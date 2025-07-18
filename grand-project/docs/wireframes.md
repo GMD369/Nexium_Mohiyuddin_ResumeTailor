@@ -1,25 +1,3 @@
-Login Page
-+-----------------------------+
-|  Enter your email           |
-|  [ Send Magic Link ]        |
-+-----------------------------+
+Figma Link:
 
-Resume Input Page
-+-----------------------------+
-|  Name: ____________________ |
-|  Email: ___________________ |
-|  Experience: ______________ |
-|  Skills: __________________ |
-|  Job Title: _______________ |
-|  Job Description: _________ |
-|  [ Generate Resume ]        |
-+-----------------------------+
-
-Resume Output Page
-+-----------------------------+
-|  AI-Tailored Resume         |
-|  ------------------------   |
-|  ...generated text...       |
-|                             |
-|  [ Download PDF ] [ Copy ]  |
-+-----------------------------+
+https://www.figma.com/make/TswkqEVmSJjPMaJ33dGNuO/Modern-Resume-Tailor-Application?node-id=0-1&p=f&t=YUHDtNrT3Z6oVr10-0&fullscreen=1

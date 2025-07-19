@@ -1,103 +1,75 @@
-import Image from "next/image";
+// app/page.tsx
+"use client"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBullseye, faRobot, faBolt, faLink, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+    <main className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center px-10 py-16">
+      {/* Hero Section */}
+      <section className="text-center max-w-2xl mb-24">
+        <div className="flex justify-center mb-6">
+          <span className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-teal-700/20">
+            <FontAwesomeIcon icon={faBullseye} className="text-teal-400 text-4xl" />
+          </span>
+        </div>
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-5 tracking-tight leading-tight">
+          Tailor Your Resume with AI
+        </h1>
+        <p className="text-zinc-400 text-lg mb-8 font-medium">
+          Paste your resume and job description. Get a tailored version that fits the job — instantly!
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link href="/login">
+            <button className="bg-teal-600 hover:bg-teal-500 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow transition">
+              Get Started
+            </button>
+          </Link>
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#features"
+            className="text-teal-400 border border-teal-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-teal-800/40 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
+            How it Works
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Feature Section */}
+      <section id="features" className="w-full max-w-4xl text-center mb-20">
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 tracking-tight">
+          <span className="inline-flex items-center gap-2">
+            <FontAwesomeIcon icon={faBolt} className="text-teal-400 text-2xl" />
+            Features
+          </span>
+        </h2>
+        <div className="grid sm:grid-cols-2 gap-8 text-left">
+          <Feature icon={faRobot} title="AI-Powered Tailoring" desc="We use smart AI to align your resume with job descriptions automatically." />
+          <Feature icon={faLink} title="Magic Link Login" desc="No passwords! Just enter your email and you're in." />
+          <Feature icon={faBolt} title="Instant Results" desc="Tailored resume generated in seconds — no wait." />
+          <Feature icon={faShieldAlt} title="Clean, Secure UI" desc="Privacy first, simple and fast interface built with Next.js + Supabase." />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="mt-auto text-sm text-zinc-600 border-t border-zinc-800 w-full max-w-4xl mx-auto pt-8 pb-4 text-center">
+        © 2025 Resume Tailor — Built for Nexium Internship
       </footer>
+    </main>
+  );
+}
+
+function Feature({ icon, title, desc }: { icon: any; title: string; desc: string }) {
+  return (
+    <div className="bg-zinc-900 p-7 rounded-xl border border-zinc-800 hover:border-teal-500 transition flex items-start gap-4 shadow-sm">
+      <span className="mt-1">
+        <FontAwesomeIcon icon={icon} className="text-teal-400 text-2xl" />
+      </span>
+      <div>
+        <h3 className="text-xl font-semibold mb-1 text-teal-400">{title}</h3>
+        <p className="text-zinc-400 text-base font-medium">{desc}</p>
+      </div>
     </div>
   );
 }

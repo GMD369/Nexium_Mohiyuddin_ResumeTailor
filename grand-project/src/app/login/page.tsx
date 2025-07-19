@@ -1,33 +1,74 @@
 "use client"
-import { useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [sent, setSent] = useState(false)
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: any) => {
-    e.preventDefault()
-    const { error } = await supabase.auth.signInWithOtp({ email })
-    if (!error) setSent(true)
-  }
+    e.preventDefault();
+    setError(null);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: "http://localhost:3000/auth/callback",
+      },
+    });
+    if (!error) setSent(true);
+    else setError(error.message);
+  };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen p-4 bg-zinc-900 text-white">
-      <h1 className="text-3xl font-bold mb-6">Sign in with Magic Link</h1>
-      <form onSubmit={handleLogin} className="flex flex-col gap-4 w-full max-w-sm">
-        <input
-          type="email"
-          className="p-3 rounded bg-zinc-800 border border-zinc-700"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button type="submit" className="bg-teal-600 hover:bg-teal-500 p-3 rounded text-white">
-          {sent ? "Link Sent!" : "Send Magic Link"}
-        </button>
-      </form>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-zinc-950 text-white px-4 py-12">
+      <div className="w-full max-w-md bg-zinc-900 rounded-2xl shadow-lg border border-zinc-800 p-8 flex flex-col items-center">
+        <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-teal-700/20 mb-6">
+          <FontAwesomeIcon icon={faEnvelope} className="text-teal-400 text-3xl" />
+        </span>
+        <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-center tracking-tight">
+          Sign in with Magic Link
+        </h1>
+        <p className="text-zinc-400 mb-8 text-center text-base font-medium">
+          Enter your email address and we'll send you a secure sign-in link.
+        </p>
+        <form onSubmit={handleLogin} className="flex flex-col gap-4 w-full">
+          <input
+            type="email"
+            className="p-3 rounded-lg bg-zinc-800 border border-zinc-700 focus:border-teal-500 outline-none text-base transition"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={sent}
+          />
+          <button
+            type="submit"
+            className={`bg-teal-600 hover:bg-teal-500 p-3 rounded-lg text-white font-semibold text-lg transition flex items-center justify-center gap-2 ${sent ? "opacity-70 cursor-not-allowed" : ""}`}
+            disabled={sent}
+          >
+            {sent ? (
+              <>
+                <FontAwesomeIcon icon={faCheckCircle} className="text-green-400" />
+                Link Sent!
+              </>
+            ) : (
+              <>Send Magic Link</>
+            )}
+          </button>
+          {error && (
+            <div className="text-red-400 text-sm mt-1 text-center">{error}</div>
+          )}
+        </form>
+        {sent && (
+          <div className="mt-6 text-green-400 text-center text-base flex flex-col items-center gap-2">
+            <FontAwesomeIcon icon={faCheckCircle} className="text-2xl" />
+            Check your email for the magic link!
+          </div>
+        )}
+      </div>
     </main>
-  )
+  );
 }

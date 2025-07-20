@@ -29,13 +29,19 @@ export default function ResumeForm() {
     if (error) {
       console.error("DB error:", error);
     } else {
-      const response = await fetch("/api/tailor", {
+      // Send data to local API instead of n8n webhook
+      const response = await fetch("/api/tailor/forward", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
-      const result = await response.json();
-      setOutput(result.output || "No output from AI.");
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        result = { output: "No output from API." };
+      }
+      setOutput(result.output || JSON.stringify(result));
     }
     setLoading(false);
   };

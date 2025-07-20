@@ -1,26 +1,27 @@
 import { NextResponse } from "next/server"
-import OpenAI from "openai"
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
+function cleanText(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, '')      // Remove HTML tags
+    .replace(/\n|\r|\t/g, ' ') // Remove escaped newlines/tabs
+    .replace(/[\[\]{}]/g, '')   // Remove brackets
+    .replace(/\*/g, '')          // Remove asterisks
+    .replace(/[_`~]/g, '')        // Remove markdown special chars
+    .replace(/\s+/g, ' ')        // Collapse extra spaces
+    .trim();
+}
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const prompt = `
-Tailor this resume to the job description:
-
-Resume:
-${body.resume}
-
-Job Description:
-${body.jobDesc}
-`
-
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
-    temperature: 0.7,
-  })
-
-  const output = response.choices[0].message.content
-  return NextResponse.json({ output })
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    // Try to extract the main text field from n8n response
+    const text = body.tailored_resume || body.output || body.text || JSON.stringify(body);
+    if (!text) {
+      return new Response("No text found in request body.", { status: 400, headers: { 'Content-Type': 'text/plain' } });
+    }
+    const filtered = cleanText(text);
+    return new Response(filtered, { status: 200, headers: { 'Content-Type': 'text/plain' } });
+  } catch (e) {
+    return new Response("Invalid request or JSON.", { status: 400, headers: { 'Content-Type': 'text/plain' } });
+  }
 }

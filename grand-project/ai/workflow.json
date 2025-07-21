@@ -1,0 +1,122 @@
+{
+  "name": "Resume Tailor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "resume-tailor",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "77eebec8-b75d-4c16-850d-6c7551e19d29",
+      "name": "Resume Webhook",
+      "webhookId": "2bdb1a86-1d36-4e0c-9c20-3622b6569cad"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db04b800-2fda-451c-8977-58ab94a93720",
+              "name": "prompt",
+              "value": "=Using the following candidate details, generate a complete, professional, and tailored resume. Structure it naturally with logical sections such as summary, experience, and skills but do not include section headings. Optimize the resume for ATS systems by using job-relevant keywords, aligning achievements with the target job description, and ensuring a formal, concise, and impactful tone.\n\nName: {{ $json.body.name }}\nEmail: {{ $json.body.email }}\nJob Title: {{ $json.body.jobTitle }}\nExperience:\n{{ $json.body.resume }}\nTarget Job Description:\n{{ $json.body.jobDesc }}\nThe resume should:\n* Begin with a powerful summary that highlights years of experience, key technical proficiencies, and professional traits.\n* Follow with detailed experience entries written in action-oriented language with quantifiable impact where possible.\n* End with relevant technical and soft skills that align with the job description.\n* Be no longer than 2 pages in real-world output (but include all relevant content).\n* Be clean, professional, and ready for use on job boards or applications without edits.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 0],
+      "id": "48797545-7815-476c-b267-0f5d969c7db9",
+      "name": "Format Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyD_aGXyRZ-jz9J0VcRAof_Ye1ot0ImpegE",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $json.prompt }}\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "id": "df3a114d-1273-4939-8045-2e4a78de30cd",
+      "name": "Call Gemini"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ tailored_resume: $json[\"candidates\"][0][\"content\"][\"parts\"][0][\"text\"] }) }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [660, 0],
+      "id": "bb40d22f-d0ce-4e05-8fbe-121c85f480ff",
+      "name": "Return Resume"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Resume Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Prompt": {
+      "main": [
+        [
+          {
+            "node": "Call Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Gemini": {
+      "main": [
+        [
+          {
+            "node": "Return Resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c38c7b57-e9d9-40fb-b203-701411b42b37",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "576cca84c32df89857815541bedb004c1f5a6cb3e647d285c28ef075bde91a9a"
+  },
+  "id": "L13kZcJuc0b6wIb7",
+  "tags": []
+} 

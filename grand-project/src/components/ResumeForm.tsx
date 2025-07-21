@@ -30,18 +30,13 @@ export default function ResumeForm() {
       console.error("DB error:", error);
     } else {
       // Send data to local API instead of n8n webhook
-      const response = await fetch("/api/tailor/forward", {
+      const response = await fetch("/api/tailor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
-      let result;
-      try {
-        result = await response.json();
-      } catch {
-        result = { output: "No output from API." };
-      }
-      setOutput(result.output || JSON.stringify(result));
+      const result = await response.text();
+      setOutput(result);
     }
     setLoading(false);
   };
@@ -108,7 +103,16 @@ export default function ResumeForm() {
                 <FontAwesomeIcon icon={faCheckCircle} className="text-green-400 text-xl" />
                 <h3 className="text-lg font-semibold">Tailored Resume:</h3>
               </div>
-              <pre className="whitespace-pre-wrap text-zinc-100 text-base font-mono leading-relaxed">{output}</pre>
+              {/* Format output into paragraphs */}
+              <div>
+                {output
+                  .split(/\n{2,}/) // split on double newlines (sections)
+                  .map((section, idx) => (
+                    <p key={idx} className="whitespace-pre-line text-zinc-100 text-base font-mono leading-relaxed mb-4">
+                      {section.trim()}
+                    </p>
+                  ))}
+              </div>
             </div>
           </div>
         )}

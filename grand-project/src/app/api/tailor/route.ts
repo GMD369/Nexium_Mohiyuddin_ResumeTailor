@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { getDb } from '@/lib/mongodb';
 
 function cleanText(text: string): string {
   return text
@@ -49,6 +50,16 @@ export async function POST(request: Request) {
       return new Response("No text found in n8n response.", { status: 400, headers: { 'Content-Type': 'text/plain' } });
     }
     const filtered = cleanText(text);
+
+    // Save to MongoDB
+    try {
+      const db = await getDb();
+      await db.collection('resumes').insertOne({ resume: filtered, createdAt: new Date() });
+    } catch (mongoErr) {
+      console.error('[API/tailor] Failed to save resume to MongoDB:', mongoErr);
+      // Don't block response if DB fails
+    }
+
     return new Response(filtered, { status: 200, headers: { 'Content-Type': 'text/plain' } });
   } catch (e) {
     if (e instanceof Error) {

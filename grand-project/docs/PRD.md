@@ -17,8 +17,8 @@ Build an AI-powered web application that helps users generate customized resumes
 
 ## Key Features
 - Email-based login with Supabase
-- AI-generated resume tailoring using n8n + OpenAI
-- Upload existing resume (PDF or text)
+- AI-generated resume tailoring using n8n 
+- paste existing resume 
 - Paste job description
 - Get a tailored resume in seconds
 - Save/download result
@@ -26,7 +26,7 @@ Build an AI-powered web application that helps users generate customized resumes
 
 ## AI Flow
 - User pastes their resume and job description
-- n8n workflow sends data to OpenAI via HTTP Request
+- n8n workflow sends data to Gemini via HTTP Request
 - AI rewrites resume tailored to the job
 - Tailored resume sent back to frontend
 

@@ -113,6 +113,34 @@ export default function ResumeForm() {
                     </p>
                   ))}
               </div>
+              {/* Download PDF Button */}
+              <button
+                className="mt-6 bg-teal-600 hover:bg-teal-500 text-white font-semibold py-2 px-6 rounded-lg text-base transition disabled:opacity-60 disabled:cursor-not-allowed"
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/tailor/pdf", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ resume: output })
+                    });
+                    if (!res.ok) throw new Error("Failed to generate PDF");
+                    const blob = await res.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "resume.pdf";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                  } catch (err) {
+                    alert("PDF download failed. Please try again.");
+                  }
+                }}
+                disabled={!output || loading}
+              >
+                Download PDF
+              </button>
             </div>
           </div>
         )}

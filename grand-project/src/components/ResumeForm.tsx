@@ -71,12 +71,12 @@ export default function ResumeForm() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-2xl bg-zinc-900 rounded-3xl shadow-2xl border border-zinc-800 p-0 overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white flex flex-col items-center justify-center px-2 py-8">
+      <div className="w-full max-w-2xl bg-zinc-900/95 rounded-3xl shadow-2xl border border-zinc-800 p-0 overflow-hidden backdrop-blur-md">
         {/* Header Section */}
-        <div className="flex justify-between items-center px-8 pt-8 pb-4 bg-zinc-950 border-b border-zinc-800">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight flex items-center gap-3">
-            <FontAwesomeIcon icon={faClipboardList} className="text-teal-400 text-2xl" />
+        <div className="flex flex-col sm:flex-row justify-between items-center px-8 pt-8 pb-4 bg-zinc-950 border-b border-zinc-800 gap-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight flex items-center gap-3 text-teal-400">
+            <FontAwesomeIcon icon={faClipboardList} className="text-2xl" />
             Resume Tailoring
           </h2>
           <LogoutButton />
@@ -85,43 +85,43 @@ export default function ResumeForm() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-zinc-800 to-transparent mb-0" />
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 px-8 py-8">
-          <div className="flex gap-4">
-            <div className="flex-1 flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 flex items-center gap-2 bg-zinc-800/80 border border-zinc-700 rounded-xl px-4 py-2 focus-within:border-teal-500 transition-all">
               <FontAwesomeIcon icon={faUser} className="text-zinc-400" />
-              <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base" />
+              <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base placeholder-zinc-500" />
             </div>
-            <div className="flex-1 flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3">
+            <div className="flex-1 flex items-center gap-2 bg-zinc-800/80 border border-zinc-700 rounded-xl px-4 py-2 focus-within:border-teal-500 transition-all">
               <FontAwesomeIcon icon={faEnvelope} className="text-zinc-400" />
-              <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base" />
+              <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base placeholder-zinc-500" />
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3">
+          <div className="flex items-center gap-2 bg-zinc-800/80 border border-zinc-700 rounded-xl px-4 py-2 focus-within:border-teal-500 transition-all">
             <FontAwesomeIcon icon={faBriefcase} className="text-zinc-400" />
-            <input type="text" name="jobTitle" placeholder="Job Title" value={formData.jobTitle} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base" />
+            <input type="text" name="jobTitle" placeholder="Target Job Title" value={formData.jobTitle} onChange={handleChange} className="bg-transparent outline-none py-3 w-full text-base placeholder-zinc-500" />
           </div>
-          <div className="flex items-start gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3">
+          <div className="flex items-start gap-2 bg-zinc-800/80 border border-zinc-700 rounded-xl px-4 py-2 focus-within:border-teal-500 transition-all">
             <FontAwesomeIcon icon={faFileAlt} className="text-zinc-400 mt-3" />
-            <textarea name="resume" placeholder="Paste your Resume" value={formData.resume} onChange={handleChange} rows={6} className="bg-transparent outline-none py-3 w-full text-base resize-none" />
+            <textarea name="resume" placeholder="Paste your Resume here..." value={formData.resume} onChange={handleChange} rows={6} className="bg-transparent outline-none py-3 w-full text-base resize-none placeholder-zinc-500" />
           </div>
-          <div className="flex items-start gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3">
+          <div className="flex items-start gap-2 bg-zinc-800/80 border border-zinc-700 rounded-xl px-4 py-2 focus-within:border-teal-500 transition-all">
             <FontAwesomeIcon icon={faClipboardList} className="text-zinc-400 mt-3" />
-            <textarea name="jobDesc" placeholder="Paste Job Description" value={formData.jobDesc} onChange={handleChange} rows={6} className="bg-transparent outline-none py-3 w-full text-base resize-none" />
+            <textarea name="jobDesc" placeholder="Paste Job Description here..." value={formData.jobDesc} onChange={handleChange} rows={6} className="bg-transparent outline-none py-3 w-full text-base resize-none placeholder-zinc-500" />
           </div>
-          <button type="submit" disabled={loading} className={`bg-teal-600 hover:bg-teal-500 p-3 rounded-lg text-white font-semibold text-lg transition flex items-center justify-center gap-2 shadow ${loading ? "opacity-70 cursor-not-allowed" : ""}`}>
+          <button type="submit" disabled={loading} className={`bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 p-3 rounded-xl text-white font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-lg mt-2 ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.03] active:scale-95"}`}>
             {loading ? (
               <>
                 <FontAwesomeIcon icon={faSpinner} spin className="text-white" />
                 Processing...
               </>
             ) : (
-              <>Submit</>
+              <>Generate Tailored Resume</>
             )}
           </button>
         </form>
         <Toaster />
         {/* Output Section */}
         {loading && (
-          <div className="flex items-center gap-2 text-zinc-400 px-8 pb-4 text-base">
+          <div className="flex items-center gap-2 text-zinc-400 px-8 pb-4 text-base animate-pulse">
             <FontAwesomeIcon icon={faSpinner} spin className="text-teal-400" />
             Tailoring your resume, please wait...
           </div>
@@ -131,7 +131,7 @@ export default function ResumeForm() {
             <div className="mt-8 bg-gradient-to-br from-zinc-800/90 to-zinc-900/80 p-6 rounded-2xl shadow border border-zinc-700">
               <div className="flex items-center gap-2 mb-3">
                 <FontAwesomeIcon icon={faCheckCircle} className="text-green-400 text-xl" />
-                <h3 className="text-lg font-semibold">Tailored Resume:</h3>
+                <h3 className="text-lg font-semibold text-green-300">Tailored Resume:</h3>
               </div>
               {/* Format output into paragraphs */}
               <div>
@@ -145,7 +145,7 @@ export default function ResumeForm() {
               </div>
               {/* Download PDF Button */}
               <button
-                className="mt-6 bg-teal-600 hover:bg-teal-500 text-white font-semibold py-2 px-6 rounded-lg text-base transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className="mt-6 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-semibold py-2 px-6 rounded-lg text-base transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={async () => {
                   try {
                     const res = await fetch("/api/tailor/pdf", {

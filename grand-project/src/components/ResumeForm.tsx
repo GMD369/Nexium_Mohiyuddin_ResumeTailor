@@ -4,6 +4,7 @@ import { faUser, faEnvelope, faBriefcase, faFileAlt, faClipboardList, faSpinner,
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import LogoutButton from "@/components/logoutButton";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function ResumeForm() {
   const [formData, setFormData] = useState({
@@ -19,17 +20,40 @@ export default function ResumeForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setOutput("");
-
+    // Validation
+    if (!formData.name.trim()) {
+      toast.error("Name is required.");
+      return;
+    }
+    if (!formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (!formData.jobTitle.trim()) {
+      toast.error("Job title is required.");
+      return;
+    }
+    if (!formData.resume.trim()) {
+      toast.error("Resume is required.");
+      return;
+    }
+    if (!formData.jobDesc.trim()) {
+      toast.error("Job description is required.");
+      return;
+    }
+    setLoading(true);
+    toast.loading("Submitting your data...", { id: "resume-submit" });
     const { data, error } = await supabase
       .from("resumes")
       .insert([formData]);
-
     if (error) {
-      console.error("DB error:", error);
-    } else {
-      // Send data to local API instead of n8n webhook
+      toast.dismiss("resume-submit");
+      toast.error("Database error: " + error.message);
+      setLoading(false);
+      return;
+    }
+    try {
       const response = await fetch("/api/tailor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -37,6 +61,11 @@ export default function ResumeForm() {
       });
       const result = await response.text();
       setOutput(result);
+      toast.dismiss("resume-submit");
+      toast.success("Resume tailored successfully!");
+    } catch (err) {
+      toast.dismiss("resume-submit");
+      toast.error("Failed to tailor resume.");
     }
     setLoading(false);
   };
@@ -89,6 +118,7 @@ export default function ResumeForm() {
             )}
           </button>
         </form>
+        <Toaster />
         {/* Output Section */}
         {loading && (
           <div className="flex items-center gap-2 text-zinc-400 px-8 pb-4 text-base">
@@ -133,8 +163,9 @@ export default function ResumeForm() {
                     a.click();
                     a.remove();
                     window.URL.revokeObjectURL(url);
+                    toast.success("PDF downloaded!");
                   } catch (err) {
-                    alert("PDF download failed. Please try again.");
+                    toast.error("PDF download failed. Please try again.");
                   }
                 }}
                 disabled={!output || loading}

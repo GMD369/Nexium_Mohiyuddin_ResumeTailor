@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,14 +13,25 @@ export default function LoginPage() {
   const handleLogin = async (e: any) => {
     e.preventDefault();
     setError(null);
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    toast.loading("Sending magic link...", { id: "sending" });
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: "http://localhost:3000/auth/callback",
       },
     });
-    if (!error) setSent(true);
-    else setError(error.message);
+    toast.dismiss("sending");
+    if (!error) {
+      setSent(true);
+      toast.success("Magic link sent! Check your email.");
+    } else {
+      setError(error.message);
+      toast.error(error.message || "Failed to send magic link.");
+    }
   };
 
   return (
@@ -61,6 +73,9 @@ export default function LoginPage() {
           {error && (
             <div className="text-red-400 text-sm mt-1 text-center">{error}</div>
           )}
+          {!sent && (
+            <div className="text-zinc-400 text-xs text-center mt-2">You will receive an email with a magic link if the address is valid.</div>
+          )}
         </form>
         {sent && (
           <div className="mt-6 text-green-400 text-center text-base flex flex-col items-center gap-2">
@@ -69,6 +84,7 @@ export default function LoginPage() {
           </div>
         )}
       </div>
+      <Toaster />
     </main>
   );
 }

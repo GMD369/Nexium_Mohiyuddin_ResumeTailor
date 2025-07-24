@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server"
 import { getDb } from '@/lib/mongodb';
 
 function cleanText(text: string): string {

@@ -7,7 +7,6 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let client: MongoClient;
 const clientPromise: Promise<MongoClient> = global._mongoClientPromise ?? (global._mongoClientPromise = new MongoClient(uri).connect());
 
 export async function getDb(): Promise<Db> {

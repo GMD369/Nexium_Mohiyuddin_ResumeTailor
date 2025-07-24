@@ -44,9 +44,9 @@ export default function ResumeForm() {
     }
     setLoading(true);
     toast.loading("Submitting your data...", { id: "resume-submit" });
-    const { data/*, error*/ } = await supabase
-      .from("resumes")
-      .insert([formData]);
+    // const { data/*, error*/ } = await supabase
+    //   .from("resumes")
+    //   .insert([formData]);
     // if (error) {
     //   toast.dismiss("resume-submit");
     //   toast.error("Database error: " + error.message);

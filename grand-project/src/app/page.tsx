@@ -60,7 +60,7 @@ export default function Home() {
   );
 }
 
-function Feature({ icon, title, desc }: { icon: any; title: string; desc: string }) {
+function Feature({ icon, title, desc }: { icon: React.ComponentProps<typeof FontAwesomeIcon>["icon"]; title: string; desc: string }) {
   return (
     <div className="bg-zinc-900 p-7 rounded-xl border border-zinc-800 hover:border-teal-500 transition flex items-start gap-4 shadow-sm">
       <span className="mt-1">

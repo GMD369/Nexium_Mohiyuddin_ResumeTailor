@@ -44,15 +44,15 @@ export default function ResumeForm() {
     }
     setLoading(true);
     toast.loading("Submitting your data...", { id: "resume-submit" });
-    const { data, error } = await supabase
+    const { data/*, error*/ } = await supabase
       .from("resumes")
       .insert([formData]);
-    if (error) {
-      toast.dismiss("resume-submit");
-      toast.error("Database error: " + error.message);
-      setLoading(false);
-      return;
-    }
+    // if (error) {
+    //   toast.dismiss("resume-submit");
+    //   toast.error("Database error: " + error.message);
+    //   setLoading(false);
+    //   return;
+    // }
     try {
       const response = await fetch("/api/tailor", {
         method: "POST",

@@ -11,9 +11,7 @@ export async function POST(req: NextRequest) {
     // Parse the resume text into sections (without changing text)
     // Heuristic: Name/Email (first 1-2 lines), then summary (first para), then experience (middle), then skills (last para)
     const lines = resume.split(/\r?\n/).map(l => l.trim());
-    let name = lines[0] || "";
-    let email = lines[1] && lines[1].includes("@") ? lines[1] : "";
-    let rest = lines.slice(email ? 2 : 1).join("\n");
+    const rest = lines.slice(lines[1] && lines[1].includes("@") ? 2 : 1).join("\n");
     const paragraphs = rest.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
 
     // Assign sections
@@ -58,7 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Helper to draw text with wrapping and page break support, using correct font
-    function drawText(text: string, opts: { bold?: boolean; size?: number; color?: any } = {}) {
+    function drawText(text: string, opts: { bold?: boolean; size?: number; color?: ReturnType<typeof rgb> } = {}) {
       const { bold, size = 12, color = rgb(0,0,0) } = opts;
       const fontObj = bold ? fontBold : font;
       const paragraphs = text.split(/\r?\n/);
@@ -99,12 +97,11 @@ export async function POST(req: NextRequest) {
       // Remove extra spaces
       const clean = text.replace(/\s+\|\s+/g, ' | ');
       const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      let name = lines[0] || '';
-      let email = lines[1] && lines[1].includes('@') ? lines[1] : '';
+      const name = lines[0] || '';
+      const email = lines[1] && lines[1].includes('@') ? lines[1] : '';
       let rest = lines.slice(email ? 2 : 1).join(' ');
 
       // Try to find skills section (comma separated or bulleted)
-      let skillsIdx = -1;
       let skills = '';
       let experience = '';
       let summary = '';

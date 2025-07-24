@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
@@ -44,7 +44,7 @@ export default function LoginPage() {
           Sign in with Magic Link
         </h1>
         <p className="text-zinc-400 mb-8 text-center text-base font-medium">
-          Enter your email address and we'll send you a secure sign-in link.
+          Enter your email address and we&apos;ll send you a secure sign-in link.
         </p>
         <form onSubmit={handleLogin} className="flex flex-col gap-4 w-full">
           <input

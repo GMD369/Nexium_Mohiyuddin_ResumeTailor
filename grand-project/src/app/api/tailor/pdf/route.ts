@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const paragraphs = rest.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
 
     // Assign sections
-    let summary = paragraphs[0] || "";
+    const summary = paragraphs[0] || "";
     let experience = paragraphs.slice(1, -1).join("\n\n");
     let skills = paragraphs[paragraphs.length - 1] || "";
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const sectionSpacing = 24;
 
     // Helper to wrap text to fit page width
-    function wrapText(text: string, fontObj: typeof font, fontSize: number, maxWidth: number) {
+    function wrapText(text: string, fontObj: typeof font, fontSize: number, maxWidth: number): string[] {
       const words = text.split(' ');
       const lines: string[] = [];
       let currentLine = '';
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Helper to draw text with wrapping and page break support, using correct font
-    function drawText(text: string, opts: { bold?: boolean; size?: number; color?: ReturnType<typeof rgb> } = {}) {
+    function drawText(text: string, opts: { bold?: boolean; size?: number; color?: ReturnType<typeof rgb> } = {}): void {
       const { bold, size = 12, color = rgb(0,0,0) } = opts;
       const fontObj = bold ? fontBold : font;
       const paragraphs = text.split(/\r?\n/);
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Helper to draw section text with preserved line breaks and always normal font
-    function drawSectionText(text: string) {
+    function drawSectionText(text: string): void {
       const paragraphs = text.split(/\n{2,}/);
       for (const para of paragraphs) {
         const lines = para.split(/\r?\n/);
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Improved section detection for block text resumes
-    function smartSectionSplit(text: string) {
+    function smartSectionSplit(text: string): { name: string; email: string; summary: string; experience: string; skills: string } {
       // Remove extra spaces
       const clean = text.replace(/\s+\|\s+/g, ' | ');
       const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);

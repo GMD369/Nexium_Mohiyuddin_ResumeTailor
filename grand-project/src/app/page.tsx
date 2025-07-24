@@ -46,7 +46,7 @@ export default function Home() {
         </h2>
         <div className="grid sm:grid-cols-2 gap-8 text-left">
           <Feature icon={faRobot} title="AI-Powered Tailoring" desc="We use smart AI to align your resume with job descriptions automatically." />
-          <Feature icon={faLink} title="Magic Link Login" desc="No passwords! Just enter your email and you're in." />
+          <Feature icon={faLink} title="Magic Link Login" desc="No passwords! Just enter your email and you&apos;re in." />
           <Feature icon={faBolt} title="Instant Results" desc="Tailored resume generated in seconds — no wait." />
           <Feature icon={faShieldAlt} title="Clean, Secure UI" desc="Privacy first, simple and fast interface built with Next.js + Supabase." />
         </div>

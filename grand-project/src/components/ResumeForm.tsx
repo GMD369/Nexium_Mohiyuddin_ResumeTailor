@@ -2,7 +2,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEnvelope, faBriefcase, faFileAlt, faClipboardList, faSpinner, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import LogoutButton from "@/components/logoutButton";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -44,15 +43,6 @@ export default function ResumeForm() {
     }
     setLoading(true);
     toast.loading("Submitting your data...", { id: "resume-submit" });
-    // const { data/*, error*/ } = await supabase
-    //   .from("resumes")
-    //   .insert([formData]);
-    // if (error) {
-    //   toast.dismiss("resume-submit");
-    //   toast.error("Database error: " + error.message);
-    //   setLoading(false);
-    //   return;
-    // }
     try {
       const response = await fetch("/api/tailor", {
         method: "POST",

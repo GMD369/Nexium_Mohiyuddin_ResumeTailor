@@ -1,3 +1,5 @@
+import { getDb } from '../../../lib/mongodb';
+
 function cleanText(text: string): string {
   return text
     .replace(/<[^>]*>/g, '')      // Remove HTML tags

@@ -200,6 +200,20 @@ export default function ResumeForm() {
                       <textarea
                         value={editedResume}
                         onChange={(e) => setEditedResume(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            const target = e.target as HTMLTextAreaElement;
+                            const start = target.selectionStart;
+                            const end = target.selectionEnd;
+                            const newValue = editedResume.substring(0, start) + '\n' + editedResume.substring(end);
+                            setEditedResume(newValue);
+                            // Set cursor position after the newline
+                            setTimeout(() => {
+                              target.setSelectionRange(start + 1, start + 1);
+                            }, 0);
+                          }
+                        }}
                         className="w-full h-96 p-4 bg-zinc-800 border border-zinc-600 rounded-lg text-sm text-zinc-100 font-mono resize-none focus:border-teal-500 outline-none"
                         placeholder="Edit your resume here..."
                       />

@@ -135,38 +135,40 @@ export async function POST(req: NextRequest) {
       return { name, email, summary, experience, skills };
     }
 
-    // Use smart section split for block text
-    const { name: sName, email: sEmail, summary: sSummary, experience: sExperience, skills: sSkills } = smartSectionSplit(resume);
+    // Helper: Parse resume text into structured sections
+    function parseResumeSections(text: string) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      let name = '', contact = '', rest = '';
+      let sections: { [key: string]: string } = {};
+      name = lines[0] || '';
+      let contactLines: string[] = [];
+      let i = 1;
+      while (i < lines.length && !/^Profile|Education|Experience|Projects/i.test(lines[i])) {
+        contactLines.push(lines[i]);
+        i++;
+      }
+      contact = contactLines.join(' ');
+      let currentSection = '';
+      for (; i < lines.length; i++) {
+        const line = lines[i];
+        const sectionMatch = line.match(/^(Profile|Education|Experience|Projects)/i);
+        if (sectionMatch) {
+          currentSection = sectionMatch[1];
+          sections[currentSection] = '';
+        } else if (currentSection) {
+          sections[currentSection] += (sections[currentSection] ? '\n' : '') + line;
+        }
+      }
+      return { name, contact, sections };
+    }
 
-    // Name & Email
-    if (sName) {
-      drawText(sName, { bold: true, size: 16 });
-      y -= 4;
-    }
-    if (sEmail) {
-      drawText(sEmail, { size: 12, color: rgb(0.1,0.1,0.1) });
-      y -= sectionSpacing;
-    }
-    // Summary
-    if (sSummary) {
-      drawText("Summary", { bold: true, size: 13 });
-      y -= 2;
-      drawSectionText(sSummary);
-      y -= sectionSpacing - 4;
-    }
-    // Experience
-    if (sExperience) {
-      drawText("Experience", { bold: true, size: 13 });
-      y -= 2;
-      drawSectionText(sExperience);
-      y -= sectionSpacing - 4;
-    }
-    // Skills
-    if (sSkills) {
-      drawText("Skills", { bold: true, size: 13 });
-      y -= 2;
-      drawSectionText(sSkills);
-      y -= sectionSpacing - 4;
+    // Simple approach: Use the raw resume text directly with proper paragraph formatting
+    const resumeParagraphs = resume.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+    
+    // Draw each paragraph with proper spacing
+    for (const paragraph of resumeParagraphs) {
+      drawSectionText(paragraph);
+      y -= sectionSpacing - 4; // Extra space between paragraphs
     }
 
     // Finalize PDF

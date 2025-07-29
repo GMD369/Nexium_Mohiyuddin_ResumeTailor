@@ -14,17 +14,6 @@ export async function POST(req: NextRequest) {
     const rest = lines.slice(lines[1] && lines[1].includes("@") ? 2 : 1).join("\n");
     const paragraphs = rest.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
 
-    // Assign sections
-    const summary = paragraphs[0] || "";
-    let experience = paragraphs.slice(1, -1).join("\n\n");
-    let skills = paragraphs[paragraphs.length - 1] || "";
-
-    // If only 2 paras, treat last as skills, else experience is middle
-    if (paragraphs.length === 2) {
-      experience = "";
-      skills = paragraphs[1];
-    }
-
     // Create PDF
     const pdfDoc = await PDFDocument.create();
     let page = pdfDoc.addPage();
@@ -90,76 +79,6 @@ export async function POST(req: NextRequest) {
         }
         y -= 4; // extra space between paragraphs
       }
-    }
-
-    // Improved section detection for block text resumes
-    function smartSectionSplit(text: string): { name: string; email: string; summary: string; experience: string; skills: string } {
-      // Remove extra spaces
-      const clean = text.replace(/\s+\|\s+/g, ' | ');
-      const lines = clean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      const name = lines[0] || '';
-      const email = lines[1] && lines[1].includes('@') ? lines[1] : '';
-      let rest = lines.slice(email ? 2 : 1).join(' ');
-
-      // Try to find skills section (comma separated or bulleted)
-      let skills = '';
-      let experience = '';
-      let summary = '';
-      // Heuristic: skills are often at the end, comma separated, or after 'Proficient in', 'Skills:', etc.
-      const skillsMatch = rest.match(/((Proficient in|Skills:|Expertise:)[^\n]*)$/i);
-      if (skillsMatch) {
-        skills = skillsMatch[1].replace(/^(Proficient in|Skills:|Expertise:)/i, '').trim();
-        rest = rest.replace(skillsMatch[0], '').trim();
-      } else {
-        // Try last comma-separated line
-        const lastCommaIdx = rest.lastIndexOf(',');
-        if (lastCommaIdx > 0) {
-          const possibleSkills = rest.slice(lastCommaIdx - 30).split(/\.|\n/).pop();
-          if (possibleSkills && possibleSkills.split(',').length > 3) {
-            skills = possibleSkills.trim();
-            rest = rest.replace(possibleSkills, '').trim();
-          }
-        }
-      }
-      // Experience: try to find 'Developed', 'Maintained', 'Implemented', etc.
-      const expMatch = rest.match(/((Developed|Maintained|Implemented|Migrated|Integrated|Deployed|Successfully|Collaborated|Built|Created)[^]*)/i);
-      if (expMatch) {
-        experience = expMatch[1].trim();
-        summary = rest.replace(expMatch[0], '').trim();
-      } else {
-        // Fallback: first 3-4 lines as summary, rest as experience
-        const words = rest.split(' ');
-        summary = words.slice(0, 50).join(' ');
-        experience = words.slice(50).join(' ');
-      }
-      return { name, email, summary, experience, skills };
-    }
-
-    // Helper: Parse resume text into structured sections
-    function parseResumeSections(text: string) {
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      let name = '', contact = '', rest = '';
-      let sections: { [key: string]: string } = {};
-      name = lines[0] || '';
-      let contactLines: string[] = [];
-      let i = 1;
-      while (i < lines.length && !/^Profile|Education|Experience|Projects/i.test(lines[i])) {
-        contactLines.push(lines[i]);
-        i++;
-      }
-      contact = contactLines.join(' ');
-      let currentSection = '';
-      for (; i < lines.length; i++) {
-        const line = lines[i];
-        const sectionMatch = line.match(/^(Profile|Education|Experience|Projects)/i);
-        if (sectionMatch) {
-          currentSection = sectionMatch[1];
-          sections[currentSection] = '';
-        } else if (currentSection) {
-          sections[currentSection] += (sections[currentSection] ? '\n' : '') + line;
-        }
-      }
-      return { name, contact, sections };
     }
 
     // Simple approach: Use the raw resume text directly with proper paragraph formatting

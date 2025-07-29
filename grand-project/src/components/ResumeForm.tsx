@@ -8,37 +8,26 @@ import { Toaster, toast } from "react-hot-toast";
 // Helper: Parse resume text into structured sections
 function parseResumeSections(text: string) {
   const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  
-  // Name: first line
   const name = lines[0] || '';
-  
-  // Contact: next lines until we find a line that looks like content (not contact info)
   const contactLines: string[] = [];
   let i = 1;
   while (i < lines.length) {
     const line = lines[i];
-    // If line contains email, phone, or common contact patterns, it's contact info
-    if (line.includes('@') || line.includes('+') || line.includes('www') || 
+    if (line.includes('@') || line.includes('+') || line.includes('www') ||
         line.includes('linkedin') || line.includes('github') || line.includes('portfolio')) {
       contactLines.push(line);
       i++;
     } else {
-      // This line looks like content, not contact info
       break;
     }
   }
   const contact = contactLines.join(' | ');
-  
-  // Remaining content: split into paragraphs
   const remainingLines = lines.slice(i);
   const content = remainingLines.join('\n');
   const paragraphs = content.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
-  
-  // Structure: first paragraph = summary, middle = experience, last = skills
   const summary = paragraphs[0] || '';
   const skills = paragraphs[paragraphs.length - 1] || '';
   const experience = paragraphs.slice(1, -1).join('\n\n');
-  
   return {
     name,
     contact,

@@ -13,7 +13,7 @@ function parseResumeSections(text: string) {
   const name = lines[0] || '';
   
   // Contact: next lines until we find a line that looks like content (not contact info)
-  let contactLines: string[] = [];
+  const contactLines: string[] = [];
   let i = 1;
   while (i < lines.length) {
     const line = lines[i];
